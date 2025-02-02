@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .button-container {
+            margin-top: 30px;
+        }
+
+        .large-button {
+            background-color: #28a745;
+            color: white;
+            padding: 20px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .large-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin's Dashboard</h1>
+        <div class="button-container">
+            <button id="uploadMarks" class="large-button">Upload Marks</button>
+            <button class="large-button">Update Marks</button>
+            <button class="large-button">Student Details</button>
+            
+        </div>
+    </div>
+    <input type="file" id="fileInput" style="display:none;" />
+    <script>
+        document.getElementById('uploadMarks').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                alert(`Selected file: ${file.name}`);
+            }
+        });
+    </script>
+</body>
+</html>

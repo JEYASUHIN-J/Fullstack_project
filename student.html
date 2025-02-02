@@ -1,0 +1,375 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Student Dashboard</title>  
+  <style>  
+      
+    body {  
+      font-family: Arial, sans-serif;  
+      background-color: #f5f5f5;  
+      margin: 0;  
+      padding: 0;  
+    }  
+      
+    .dashboard-container {  
+      display: flex;  
+      flex-direction: column;  
+      padding: 20px;  
+      width: 100%;  
+      max-width: 1200px;  
+      margin: 0 auto;  
+    }  
+      
+    .top-container {  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: flex-start;  
+      margin-bottom: 20px;  
+    }  
+      
+    .left-side {  
+      flex: 0 0 65%;  
+      display: flex;  
+      flex-direction: column;  
+      gap: 20px;  
+    }  
+      
+    .profile-box {  
+      background: #ffffff;  
+      border-radius: 8px;  
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+      padding: 20px;  
+      width: 100%;  
+      background-color: #e0f7fa;  
+      text-align: center; 
+    }  
+      
+    .profile-box h1 {  
+      margin: 0 0 5px 0;  
+      color: #00796b;  
+      font-size: 44px;  
+    }  
+      
+    .student-image {  
+      width: 120px;  
+      height: 120px;  
+      border-radius: 50%;  
+      margin: 10px 0;  
+      object-fit: cover; 
+    }  
+      
+    .total-projects {  
+      margin-top: 10px;  
+      font-size: 30px;  
+      color: #00796b;  
+    }  
+      
+    .project-history {  
+      background: #ffffff;  
+      border-radius: 8px;  
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+      padding: 20px;  
+      width: 100%;  
+      margin-bottom: 50px;  
+      background-color: #fff3e0;  
+    }  
+
+    .project-history table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .project-history th, .project-history td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    .project-history th {
+      background-color: #f0f0f0;
+    }
+
+    .project-history tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .department {  
+      color: #ff5722;  
+      font-weight: bold;  
+      font-size: 24px;  
+    }  
+      
+    .right-side {  
+      flex: 0 0 35%;  
+      display: flex;  
+      margin-left: 100px;  
+      justify-content: center;  
+      align-items: center; 
+      margin-top:60px; 
+    }  
+      
+    #project-pie-chart {  
+      width: 80%;  
+      height: 300px;  
+    }  
+
+    .button-container {
+      margin-bottom: 20px;
+    }
+
+    .button-container button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      
+    }
+
+    .button-container .completed {
+      background-color: #00796b;
+      color: #ffffff;
+      padding-top:20px;
+      padding-bottom:20px;
+      padding-right:50px;
+      padding-left:50px;
+      margin-left:160px;
+    }
+
+    .button-container .ongoing {
+      background-color: #ff5722;
+      color: #ffffff;  
+      padding-top:20px;
+      padding-bottom:20px;
+      padding-right:50px;
+      padding-left:50px;
+    }
+
+    /* Responsive design */  
+    @media (max-width: 768px) {  
+      .top-container {  
+        flex-direction: column;  
+        align-items: center;  
+      }  
+        
+      .left-side, .right-side {  
+        width: 100%;  
+        max-width: none;  
+      }  
+      
+      #project-pie-chart {  
+        height: 250px;  
+      }  
+    }  
+  </style>  
+</head>  
+<body>  
+   
+  <div class="dashboard-container">  
+    
+    <div class="top-container">  
+      
+      <div class="left-side">  
+         
+        <div class="profile-box">  
+          <img src="E:/fullstack/PROJECT/images/download (1).png" alt="Student Image" class="student-image">  
+          <h1 class="name" id="student-name">Jeya Suhin J</h1>  
+          <h3 class="department">Artificial Intelligence and Data Science</h3>
+          <div class="total-projects">  
+            <p><strong>Total Projects:</strong> 4</p>  
+          </div>  
+        </div>  
+          
+         
+        <div class="button-container">  
+          <button class="completed" onclick="showCompletedProjects()">Completed Projects</button>  
+          <button class="ongoing" onclick="showOngoingProjects()">Ongoing Projects</button>  
+        </div>  
+ 
+        <div class="project-history">  
+          <h2>Project History</h2>  
+          <table id="project-history-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Marks</th>
+                <th>Status</th>
+                <th>Feedback</th>
+                <th>Guide</th>
+              </tr>
+            </thead>
+            <tbody id="project-list">
+              
+            </tbody>
+          </table>
+        </div>  
+      </div>  
+        
+      
+      <div class="right-side">  
+        <canvas id="project-pie-chart"></canvas>  
+      </div>  
+    </div>  
+  </div>  
+    
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>  
+  <script>  
+   
+    const studentData = {
+      name: 'Jeya Suhin J',
+      image: 'E:/fullstack/PROJECT/images/download (1).png',
+      projects: [
+        {
+          name: 'Automatic Plant Watering System',
+          type: 'Hardware',
+          marks: 80,
+          status: 'Completed',
+          feedback: 'Good job!',
+          guide: 'Ms. Vaanathi',
+          link: 'project1.html' 
+        },
+        {
+          name: 'Gender Detection',
+          type: 'Software',
+          marks: 90,
+          status: 'Completed',
+          feedback: 'Excellent work!',
+          guide: 'Ms. Sangavi',
+          link: 'project2.html'
+        },
+        {
+          name: 'Sentiment Analysis',
+          type: 'Research',
+          marks: 0,
+          status: 'Ongoing',
+          feedback: '-',
+          guide: 'Mr. Rajkumar',
+          link: 'project3.html' 
+        },
+        {
+          name: 'Appointment Booking Website',
+          type: 'Software',
+          marks: 92,
+          status: 'Completed',
+          feedback: 'Great implementation!',
+          guide: 'Ms. Vaanathi',
+          link: 'project4.html'
+        }
+      ]
+    };  
+    
+    function renderProjectHistory(filteredProjects) {
+      let projectHistoryHTML = '';  
+      filteredProjects.forEach((project) => {  
+        projectHistoryHTML += `  
+          <tr onclick="window.location.href='${project.link}'">  
+            <td>${project.name}</td>  
+            <td>${project.type}</td>  
+            <td>${project.marks}</td>  
+            <td>${project.status}</td>  
+            <td>${project.feedback}</td>  
+            <td>${project.guide}</td>  
+          </tr>  
+        `;  
+      });  
+      document.getElementById('project-list').innerHTML = projectHistoryHTML;  
+    }  
+    
+
+    function showCompletedProjects() {
+      const completedProjects = studentData.projects.filter(project => project.status === 'Completed');
+      renderProjectHistory(completedProjects);
+    }
+    
+  
+    function showOngoingProjects() {
+      const ongoingProjects = studentData.projects.filter(project => project.status === 'Ongoing').map(project => ({
+        name: project.name,
+        type: project.type,
+        marks: '-',
+        status: project.status,
+        feedback: '-',
+        guide: project.guide
+      }));
+      let ongoingProjectsHTML = '';
+      ongoingProjects.forEach((project) => {
+        ongoingProjectsHTML += `  
+          <tr>  
+            <td>${project.name}</td>  
+            <td>${project.type}</td>  
+            <td>${project.marks}</td>  
+            <td>${project.status}</td>  
+            <td>${project.feedback}</td>  
+            <td>${project.guide}</td>  
+          </tr>  
+        `;
+      });
+      document.getElementById('project-list').innerHTML = ongoingProjectsHTML;
+    }
+    
+    
+    renderProjectHistory(studentData.projects);
+    
+   
+    const pieChartCanvas = document.getElementById('project-pie-chart');  
+    const ctx = pieChartCanvas.getContext('2d');  
+    const projectTypes = studentData.projects.map((project) => project.type);  
+    const projectCounts = {};  
+    projectTypes.forEach((type) => {  
+      projectCounts[type] = (projectCounts[type] || 0) + 1;  
+    });  
+    
+    const chartData = [];  
+    Object.keys(projectCounts).forEach((type) => {  
+      chartData.push({  
+        label: type,  
+        value: projectCounts[type]  
+      });  
+    });  
+    
+    const chart = new Chart(ctx, {  
+      type: 'pie',  
+      data: {  
+        labels: chartData.map((data) => data.label),  
+        datasets: [{  
+          data: chartData.map((data) => data.value),  
+          backgroundColor: [  
+            'rgba(255, 99, 132, 0.2)',  
+            'rgba(54, 162, 235, 0.2)',  
+            'rgba(255, 206, 86, 0.2)',  
+            'rgba(75, 192, 192, 0.2)',  
+            'rgba(153, 102, 255, 0.2)',  
+            'rgba(255, 159, 64, 0.2)'  
+          ],  
+          borderColor: [  
+            'rgba(255, 99, 132, 1)',  
+            'rgba(54, 162, 235, 1)',  
+            'rgba(255, 206, 86, 1)',  
+            'rgba(75, 192, 192, 1)',  
+            'rgba(153, 102, 255, 1)',  
+            'rgba(255, 159, 64, 1)'  
+          ],  
+          borderWidth: 1  
+        }]  
+      },  
+      options: {  
+        plugins: {  
+          tooltip: {  
+            callbacks: {  
+              label: function(tooltipItem) {  
+                return `${tooltipItem.label}: ${tooltipItem.raw}`;  
+              }  
+            }  
+          }  
+        },  
+        responsive: true,  
+        maintainAspectRatio: false  
+      }  
+    });  
+  </script>  
+</body>  
+</html>
